@@ -1,6 +1,5 @@
 # ActiveUpdate
 ## Installation
-```activeupdate``` can be installed via the execution of the following command:
 ```
 gem install activeupdate
 ```
