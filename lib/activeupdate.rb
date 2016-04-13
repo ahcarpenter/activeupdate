@@ -1,10 +1,12 @@
 module ActiveRecordExtension
-
   extend ActiveSupport::Concern
 
-  # add your static(class) methods here
   module ClassMethods
 
+    # Updates an object (or multiple objects) and saves it to the database. The resulting object is returned whether the object was saved successfully to the database or not.
+    #
+    # @param resources_hash [Hash], a hash of resources, { '0' => { 'id' => 1, 'attribute' => 'test' }, '1'  => { 'id' => 2, 'attribute' => 'cheese' } }
+    # @return [Object], the object.
     def update!(resources_hash = nil)
       return self unless resources_hash
 
@@ -46,5 +48,4 @@ module ActiveRecordExtension
   end
 end
 
-# include the extension
 ActiveRecord::Base.send(:include, ActiveRecordExtension)
