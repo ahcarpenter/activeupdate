@@ -20,3 +20,5 @@ Model.update!(resource_hash)
 
 ## Versioning
 http://semver.org
+
+with inspiration courtesy of @danieljacobarcher
