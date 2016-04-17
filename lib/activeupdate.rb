@@ -5,8 +5,8 @@ module ActiveRecordExtension
 
     # Updates an object (or multiple objects) and saves it to the database. The resulting object is returned whether the object was saved successfully to the database or not.
     #
-    # @param ids [Array], an array of ids
-    # @param attributes [Array], an array of attribute hashes
+    # @param ids [Array] an array of ids
+    # @param attributes [Array] an array of attribute hashes
     # @return [Object] the object.
     def update!(ids, attributes)
       update_manager = Arel::UpdateManager.new
