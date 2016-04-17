@@ -19,11 +19,8 @@ module ActiveRecordExtension
 
       attributes.each_with_index do |attribute, index|
         attribute.each do |key, value|
-          if attribute_hash[key]
-            attribute_hash[key].when(ids[index]).then(value)
-          else
-            attribute_hash[key] = Arel::Nodes::Case.new(resources_id).when(ids[index]).then(value)
-          end
+          attribute_hash[key] = Arel::Nodes::Case.new(resources_id) unless attribute_hash[key]
+          attribute_hash[key].when(ids[index]).then(value)
         end
       end
 
