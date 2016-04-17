@@ -5,43 +5,35 @@ module ActiveRecordExtension
 
     # Updates an object (or multiple objects) and saves it to the database. The resulting object is returned whether the object was saved successfully to the database or not.
     #
-    # @param resources_hash [Hash] a hash of resources, { '0' => { 'id' => 1, 'attribute' => 'test' }, '1'  => { 'id' => 2, 'attribute' => 'cheese' } }
+    # @param ids [Array], an array of ids
+    # @param attributes [Array], an array of attribute hashes
     # @return [Object] the object.
-    def update!(resources_hash = nil)
-      return self unless resources_hash
-
+    def update!(ids, attributes)
       update_manager = Arel::UpdateManager.new
+
       resources = self.arel_table
 
-      attribute_values = []
+      attribute_hash = {}
 
-      first_resources_hash = resources_hash.delete('0')
-      first_resources_id = first_resources_hash.delete('id').to_i
-
-      resource_ids = []
-
-      resource_ids << first_resources_id
       resources_id = resources[:id]
 
-      first_resources_hash.each do |attribute, value|
-        attribute_values << [resources[attribute.to_sym], Arel::Nodes::Case.new(resources_id).when(first_resources_id).then(value)]
-      end
-
-      resources_hash.each do |_, resource_attributes|
-        resource_id = resource_attributes.delete('id').to_i
-        resource_ids << resource_id
-
-        resource_attributes.each_with_index do |(_, value), index|
-          attribute_values[index][1].when(resource_id).then(value)
+      attributes.each_with_index do |attribute, index|
+        attribute.each do |key, value|
+          if attribute_hash[key]
+            attribute_hash[key].when(ids[index]).then(value)
+          else
+            attribute_hash[key] = Arel::Nodes::Case.new(resources_id).when(ids[index]).then(value)
+          end
         end
       end
 
-      attribute_values.map! do |attribute, values|
-        [attribute, Arel::Nodes::SqlLiteral.new(values.to_sql)]
+      attribute_array = attribute_hash.map do |attribute, values|
+        attribute = resources[attribute.to_sym]
+        [attribute, Arel::Nodes::SqlLiteral.new(values.else(attribute).to_sql)]
       end
 
-      update_manager.table(resources).where(resources_id.in(resource_ids))
-      ActiveRecord::Base.connection.execute(update_manager.set(attribute_values).to_sql)
+      update_manager.table(resources).where(resources_id.in(ids))
+      ActiveRecord::Base.connection.execute(update_manager.set(attribute_array).to_sql)
 
       self
     end

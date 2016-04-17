@@ -10,12 +10,12 @@ gem 'arel', github: 'rails/arel', branch: 'master'
 ## Usage
 ```ruby
 # Updating multiple records
-resource_hash = { 
-  '0' => { 'id' => '1', 'attribute' => 'test' }, 
-  '1' => { 'id' => '2', 'attribute' => 'cheese' } 
+resources= { 
+  0 => { 'attribute' => 'test' }, 
+  1 => { 'attribute' => 'cheese' } 
 }
 
-Model.update!(resource_hash)
+Model.update!(resources.keys, resources.values)
 ```
 
 ## YARDocs
