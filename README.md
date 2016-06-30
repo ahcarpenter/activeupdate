@@ -19,7 +19,7 @@ Model.update!(resources.keys, resources.values)
 ```
 
 ## YARDocs
-You can view the activeupdate documentation in YARDoc format [here](http://www.rubydoc.info/gems/activeupdate/0.0.4).
+You can view the activeupdate documentation in YARDoc format [here](http://www.rubydoc.info/gems/activeupdate).
 
 ## Versioning
 http://semver.org
